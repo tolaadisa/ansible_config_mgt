@@ -137,6 +137,10 @@ An Ansible inventory file defines the hosts and groups of hosts upon which comma
 
 Save below inventory structure in the `inventory/dev` file to start configuring your development servers. Ensure to replace the IP addresses according to your own setup.
 
+![inventory](./Images/inventory.png)
+
+Ensure you verify the usernames to use for each of these servers in the inventory file is correct. For redhat servers, username is `ec2-user` for ubuntu servers, the username is `ubuntu`
+
 Note: Ansible uses TCP port 22 by default, which means it needs to `ssh` into target servers from `Jenkins-Ansible` host – for this you can implement the concept of `ssh-agent`. Now you need to import your key into ssh-agent:
 
 ### step 4B
@@ -170,7 +174,7 @@ Now, ssh into your Jenkins-Ansible server using ssh-agent (use the same terminal
 
 The actual code run is below and this is followed by confrimation that a connection has been made to the Jenkins-Ansible EC2 instance:
 
-`ubuntu@44.201.161.165`
+`ssh -A ubuntu@44.201.161.165`
 
 Note that the public ip address changes everytime you restart the instance
 
@@ -197,9 +201,9 @@ Ensure to use the correct private IP address of the NFS and 2 Webservers, DB ser
 
 The `ansible_ssh_user` is needed to let ansible know which username to use for connecting with each host. 
 
-### Add SSH agent for the other servers to be connect to Bation/Jenkins-Ansible server (start from step 4B above)
+### Add SSH agent for the other servers to be connected to Bation/Jenkins-Ansible server (start from step 4B above)
 
-Now repeat above step to add the .pem keys of the NFS, Webservers, LB and every other server that you expect the bastion host to connect to.
+Now repeat above step `4b` to add the .pem keys of the NFS, Webservers, LB and every other server that you expect the bastion host to connect to.
 
 Once you have done this, you need to confirm that you can connect/ssh into these other servers from the bastion/jenkins-ansible server. To connect, use the code below for ubuntu servers:
 
@@ -291,11 +295,6 @@ Below shows the snapshot of the artificats on the Jenkins-ansible server:
 ![serversnap](./Images/serversnap.png)
 
 
-
-Below is a snapshot of the Jenkins artifacts
-
-![jenkins1](./Images/jenkins1.png)
-
 Note that if after you do `git status`, there is a conflict with your main branch and project branch, you can do a `git pull` command to make the two branches alighn with each other. 
 
 
@@ -303,35 +302,20 @@ Note that if after you do `git status`, there is a conflict with your main branc
 
 ### Step 7 – Run first Ansible test
 
-First you need to connect to the `Jenkins-Ansible` instance but you can also do this from vs code by clicking on the `open remote window` icon, then click `connect to host` 
-
-Now enter the ssh command as we have previously connected the private key to the host
-
-`ssh -A ubuntu@44.202.153.154`
-
-Executing above will likely give an error. if this is the case, clik on "more actions" and then select "open configuration file". You will need to open up the `user/ssh/config` and then add the new ssh config details as shown in the snapshot below. Note that the host is the public ip address of the jenkins-ansible server and you will need to change this every time you shutdown and restart the instance
-
-Then try to connect to remote host again but this time around to Jenkins-Ansible host 
-
-![ssh-config-file](./Images/ssh-config-file.png)
-
-Ensure you open the home/ubuntu folder and also open up the terminal. 
-
 
 Now, it is time to execute `ansible-playbook` command and verify if your playbook actually works:
 
 First ensure you are inside the terminal for the remote Jenkins-Ansible server, then run the code below:
 
 
-`cd ansible-config-mgt`
+Then take note of the build number from jenkins for the latest upload of your common.yml and dev.yml files
 
-(note to ensure that you have cloned the correct contents of the ansible-config-mgmt repository to have the correct .yml files)
+then run the `ansible-playbook` code below:
 
+`ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/11/archive/inventory/dev.yml /var/lib/jenkins/jobs/ansible/builds/11/archive/playbooks/common.yml`
 
-Then run the code below:
+The number `11` indicates the current build number.
 
-
-`ansible-playbook -i inventory/dev.yml playbooks/common.yml`
 
 ![run-ansible-1](./Images/run-ansible-1.png)
 
@@ -373,5 +357,19 @@ These changes will be made to the common.yml file so ensure you are checked out 
 - Add the following optional bit of code to the `common.yml` file:
 
 ![optional-code](./Images/optional-code.png)
+
+- push the changed code to the github repo and take note of the jenkins build number
+
+- now run the `ansible-playbook` code using the correct build number. I find using the buiild number option is easier to run update code
+
+- The result of the new updates are as follows:
+
+![new-tasks](./Images/new-tasks.png)
+
+Below shows the result of ssh into the dab server and checking the directory, file and timezone that was created matches what is expected from common.yml file
+
+![server-result](./Images/server-result.png)
+
+This brings us to the end of project 11
 
 
