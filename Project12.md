@@ -95,9 +95,66 @@ update `site.yml` with - `import_playbook: ../static-assignments/common-del.yml`
 
 `ansible-playbook -i inventory/dev.yml playbooks/site.yaml`
 
+
+- First push all the changes from the `refactor` branch to the `main` branch using:
+
+`git status` `git add . ` `git commit -m "message"` and `git push origin refactor` 
+
+Check that all the codes have been moved to Jenkins and the artifacts have been saved into the `ansible-config-artifacts` folder of the `Jenkins-Ansible` server
+
+NOTE: Before running `import_playbooks` command, you want to ping your hosts from the `ansible-config-artifacts` folder of the `Jenkins-Ansible` server
+
+Note that before you are able to ping servers sucessfully, you need to point the ansible config file to the inventory folder which houses the dev file that has all the hosts. 
+
+- copy the directory path for the inventory folder (ensure you run pwd in the inventory folder)
+
+`/home/ubuntu/ansible-config-artifact/inventory`
+
+- open ansible config file with the following code:
+
+`sudo vi /etc/ansible/ansible.cfg`
+
+now uncomment the `inventory` line and then replace the path with the path you have copied for the inventory folder. Save the modification.
+
+![inventory1](./Images/inventory1.png)
+
+![inventory2](./Images/inventory2.png)
+
+- Now you can ping the hosts by running the code below:
+
+`ansible all -m ping`
+
+The result of the ping is as follows:
+
+![ping](./Images/ping.png)
+
+Now you can run the ansible-playbook command to delete wireshark as below:
+
+`ansible-playbook -i /home/ubuntu/ansible-config-artifact/inventory/dev.yml /home/ubuntu/ansible-config-artifact/playbooks/sites.yml `
+`ansible-playbook -i inventory/dev.yml playbooks/site.yaml`
+
+Below is the result after running the ansible-playbook command:
+
+![wireshark1](./Images/wireshark1.png)
+
 Make sure that `wireshark` is deleted on all the servers by running `wireshark --version`
 
+Below are the results from checking `wireshark --version` on a few of the servers after sshing into them:
+
+![wireshark2](./Images/wireshark2.png)
+
+![wireshark3](./Images/wireshark3.png)
+
+
+
 Now you have learned how to use `import_playbooks` module and you have a ready solution to install/delete packages on multiple servers with just one command.
+
+
+
+
+
+
+![ping](./Images/ping.png)
 
 
 
