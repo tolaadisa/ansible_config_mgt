@@ -236,9 +236,9 @@ The above means we have to import the `uat-webservers.yml` file into the `sites.
 
 Commit your changes, create a Pull Request and merge them to `master` branch, make sure webhook triggered two consequent Jenkins jobs, they ran successfully and copied all the files to your `Jenkins-Ansible` server into `/home/ubuntu/ansible-config-mgt/` directory.
 
-Now run the playbook against your `uat` inventory and see what happens with the code:
+Now run the playbook against your `uat.yml` inventory and see what happens with the code (note you are running this from the jenkins-ansible server):
 
-`sudo ansible-playbook -i /home/ubuntu/ansible-config-mgt/inventory/uat.yml /home/ubuntu/ansible-config-mgt/playbooks/site.yaml`
+`sudo ansible-playbook -i /home/ubuntu/ansible-config-artifact/inventory/uat.yml /home/ubuntu/ansible-config-artifact/playbooks/sites.yml`
 
 You should be able to see both of your UAT Web servers configured and you can try to reach them from your browser:
 
