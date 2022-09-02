@@ -170,7 +170,7 @@ There are two ways how you can create this folder structure:
         `cd roles`
         `ansible-galaxy init webserver`
 
-- Create the directory/files structure manually
+- Create the directory/files structure manually (I will be creating the file sturcutre manually as shown in the structure below. )
 
 Note: You can choose either way, but since you store all your codes in GitHub, it is recommended to create folders and files there rather than locally on Jenkins-Ansible server.
 
@@ -187,14 +187,26 @@ After removing unnecessary directories and files, the `roles` structure should l
 
 ![update1](./Images/update1.png)
 
+![uatfile](./Images/uatfile.png)
+
 NOTE: Ensure you are using ssh-agent to ssh into the Jenkins-Ansible instance just as you have done in project 11;
 
 4. In `/etc/ansible/ansible.cfg` file uncomment `roles_path` string and provide a full path to your roles directory `roles_path    = /home/ubuntu/ansible-config-mgt/roles`, so Ansible could know where to find configured roles.
 
+enter the code below in the jenkins-ansible server:
+
+` sudo vi /etc/ansible/ansible.cfg`
+
+the changes to roles_path is shown below:
+
+![roles-path](./Images/roles-path.png)
+
+
+
 5. It is time to start adding some logic to the webserver role. Go into `tasks` directory, and within the`main.yml` file, start writing configuration tasks to do the following:
 
 - Install and configure Apache (httpd service)
-- Clone Tooling website from GitHub https://github.com/<your-name>/tooling.git.
+- Clone Tooling website from GitHub https://github.com/<your-name>/tooling.git.(remember to include your username from the tooling github link you previously forked here)
 - Ensure the tooling website code is deployed to `/var/www/html` on each of 2 UAT Web servers.
 - Make sure httpd service is started
 
@@ -210,11 +222,15 @@ Within the `static-assignments` folder, create a new assignment for uat-webserve
 
 ![role1](./Images/role1.png)
 
+The above code means that the hosts is UAT webserves which has the role of a webserver. And as such, ansible will go into the webserver folder and execute whats in the tasks folder
+
 Remember that the entry point to our ansible configuration is the `site.yml file`. Therefore, you need to refer your `uat-webservers.yml` role inside `site.yml`.
 
 So, we should have this in `site.yml`
 
 ![role2](./Images/role2.png)
+
+The above means we have to import the `uat-webservers.yml` file into the `sites.yml` file
 
 ### Step 5 – Commit & Test
 
