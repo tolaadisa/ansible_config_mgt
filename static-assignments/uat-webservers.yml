@@ -1,4 +1,5 @@
 ---
 - hosts: uat-webservers
   roles:
-     - webserver
+     #- webserver
+     - role: ../webserver/tasks/main.yml
