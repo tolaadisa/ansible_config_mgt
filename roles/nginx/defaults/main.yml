@@ -83,8 +83,8 @@ nginx_upstreams:
   strategy: "ip_hash" # "least_conn", etc.
   keepalive: 16 # optional
   servers:
-    - "172.31.85.134 weight=3"
-    - "172.31.85.247 weight=3"
+    - "172.31.95.122 weight=3"
+    - "172.31.24.179 weight=3"
 
 nginx_log_format: |-
   '$remote_addr - $remote_user [$time_local] "$request" '
