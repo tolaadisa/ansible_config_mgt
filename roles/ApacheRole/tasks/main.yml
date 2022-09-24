@@ -1,0 +1,45 @@
+---
+# tasks file for ApacheRole
+- name: Install Apache and dependencies
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - apache2
+      - libxml2-dev
+    state: present
+
+- name: Start httpd service if not previously started
+  become: yes
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: Enable required apaches modules
+  become: yes
+  ansible.builtin.shell: |
+    sudo a2enmod rewrite
+    sudo a2enmod proxy
+    sudo a2enmod proxy_balancer
+    sudo a2enmod proxy_http
+    sudo a2enmod headers
+    sudo a2enmod lbmethod_bytraffic
+  notify: Restart apache2 service
+
+- name: Copy configuration file
+  become: yes
+  ansible.builtin.template:
+    src: apache.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+    owner: root
+    group: root
+    mode: 0664
+  notify: Restart apache2 service
+
+- name: enable load balancer configuration
+  become: yes
+  ansible.builtin.command: 
+    a2enconf lb
+  notify: Restart apache2 service
+
+
+

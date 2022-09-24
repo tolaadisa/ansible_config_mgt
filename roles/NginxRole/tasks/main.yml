@@ -1,0 +1,23 @@
+---
+# tasks file for NginxRole
+- name: Install nginx
+  become: yes
+  ansible.builtin.service:
+    - apache
+  state: present
+
+- name: Insert configuration file
+  become: yes
+  ansible.builtin.blockinfile:
+    path: /etc/nginx/nginx.conf
+    insertafter: "http {"
+
+- name: comment out site-enabled
+  become: yes
+  ansible.builtin.replace:
+    path: /etc/nginx/nginx.conf
+    regexp: '(.*enabled.*)'
+    replace: '#\1'
+
+notify: restart Nginx service
+
