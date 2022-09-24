@@ -2,9 +2,15 @@
 # tasks file for NginxRole
 - name: Install nginx
   become: yes
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: start nginx
+  become: yes
   ansible.builtin.service:
-    - apache
-  state: present
+    name: nginx
+    state: started
 
 - name: Insert configuration file
   become: yes
@@ -19,5 +25,5 @@
     regexp: '(.*enabled.*)'
     replace: '#\1'
 
-notify: restart Nginx service
+  notify: restart Nginx service
 
