@@ -1,4 +1,5 @@
 ---
+- hosts: all
 - name: import common file
   import_playbook: ../static-assignments/common.yml
   tag: always
@@ -12,7 +13,10 @@
 - name: import webservers file
   import_playbook: ../static-assignments/webservers.yml
 
+- name: import uat webservers file
+  import_playbook: ../static-assignments/uat-webservers.yml
+
 - name: Loadbalancers assignment
   hosts: lb
-    - import_playbook: ../static-assignments/loadbalancers.yml
+  import_playbook: ../static-assignments/loadbalancers.yml
   when: load_balancer_is_required
