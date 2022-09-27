@@ -1,0 +1,8 @@
+---
+# defaults file for NginxRole
+enable_nginx_lb: false
+load_balancer_is_required: false
+
+# DNS mapping for webservers
+web1: 172.31.95.122
+web2: 172.31.24.179
