@@ -8,6 +8,8 @@
 
 - name: import env-vars file
   include: ../dynamic-assignments/env-vars.yml
+  tags: 
+    - always
 
 - name: import database file
   import_playbook: ../static-assignments/database.yml
@@ -15,8 +17,8 @@
 - name: import webservers file
   import_playbook: ../static-assignments/webservers.yml
 
-- name: import uat webservers file
-  import_playbook: ../static-assignments/uat-webservers.yml
+# - name: import uat webservers file
+#   import_playbook: ../static-assignments/uat-webservers.yml
 
 - name: Loadbalancers assignment
   import_playbook: ../static-assignments/loadbalancers.yml
